@@ -1,51 +1,78 @@
 package com.github.allangustafson.mystic_puzzles;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends ApplicationAdapter {
-    private Skin skin;
-    private Stage stage;
+public class Main implements ApplicationListener {
+
     private SpriteBatch batch;
-    private Texture image;
+    private Texture background;
+    private Texture boardFrame;
+    private FitViewport viewport;
 
     @Override
     public void create() {
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
 
         batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
+        viewport = new FitViewport(16,10);
+        background = new Texture("sky.png");
+        boardFrame = new Texture("BoardFrame.png");
 
-        TextButton textButton = new TextButton("Hello", skin);
-        textButton.setPosition(stage.getWidth()/2, stage.getHeight()/2, Align.center);
-        stage.addActor(textButton);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true); // true centers the camera
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(.9f, .9f, .9f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
-        stage.draw();
-        //super.render();
+        input();
+        logic();
+        draw();
+    }
+
+    private void input() {
+
+    }
+
+    private void logic() {
+
+    }
+
+    private void draw() {
+        ScreenUtils.clear(Color.BLACK);
+        viewport.apply();
+        batch.setProjectionMatrix(viewport.getCamera().combined);
+        batch.begin();
+        // store the worldWidth and worldHeight as local variables for brevity
+        float worldWidth = viewport.getWorldWidth();
+        float worldHeight = viewport.getWorldHeight();
+
+        // add lines to draw stuff here
+        batch.draw(background, 0, 0, worldWidth, worldHeight); // draw the background
+        batch.draw(boardFrame, 4, 1, 8,7);
+
+        batch.end();
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        image.dispose();
     }
 }
