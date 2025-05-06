@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
@@ -15,6 +17,7 @@ public class GameScreen implements Screen {
     Texture boardFrame;
     Texture glowFrameTexture;
     Sprite glowFrame;
+    Vector2 currentPos = new Vector2();
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -26,6 +29,7 @@ public class GameScreen implements Screen {
         glowFrame = new Sprite(glowFrameTexture);
         glowFrame.setSize(1,1);
         glowFrame.setPosition(5,2);
+
     }
 
     @Override
@@ -41,21 +45,22 @@ public class GameScreen implements Screen {
     }
 
     private void input() {
-        float speed = .25f;
+        float speed = 1f;
         float delta = Gdx.graphics.getDeltaTime();
 
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            glowFrame.translateY(speed * delta);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            glowFrame.translateY(1);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            glowFrame.translateX(-speed * delta);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            glowFrame.translateX(-1);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            glowFrame.translateY(-speed * delta);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            glowFrame.translateY(-1);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            glowFrame.translateX(speed * delta);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            glowFrame.translateX(1);
         }
     }
 
@@ -64,6 +69,9 @@ public class GameScreen implements Screen {
         float worldHeight = game.viewport.getWorldHeight();
         float frameWidth = glowFrame.getWidth();
         float frameHeight = glowFrame.getHeight();
+
+        glowFrame.setX(MathUtils.clamp(glowFrame.getX(),5, 10 ));
+        glowFrame.setY(MathUtils.clamp(glowFrame.getY(),2, 6 ));
 
     }
 
