@@ -17,7 +17,10 @@ public class GameScreen implements Screen {
     Texture boardFrame;
     Texture glowFrameTexture;
     Sprite glowFrame;
-    Vector2 currentPos = new Vector2();
+    Vector2 currentPos;
+    Vector2 targetPos;
+    float seconds = 1f;
+    float totalDelta = 0f;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -28,7 +31,13 @@ public class GameScreen implements Screen {
 
         glowFrame = new Sprite(glowFrameTexture);
         glowFrame.setSize(1,1);
-        glowFrame.setPosition(5,2);
+        currentPos = new Vector2(5,2);
+        targetPos = new Vector2(5,2);
+        targetPos.set(MathUtils.clamp(targetPos.x, 5, 11),
+                      MathUtils.clamp(targetPos.y, 2, 7));
+        currentPos.set(MathUtils.clamp(currentPos.x, 5, 11),
+                       MathUtils.clamp(currentPos.y, 2, 7));
+        glowFrame.setPosition(currentPos.x,currentPos.y);
 
     }
 
@@ -41,26 +50,29 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         input();
         logic();
+        //totalDelta and lerp don't seem to be working as intended. Perhaps I may need a larger viewport?
+        totalDelta += delta;
+        glowFrame.setPosition(currentPos.lerp(targetPos, totalDelta/seconds).x, currentPos.lerp(targetPos, totalDelta/seconds).y);
         draw();
     }
 
     private void input() {
-        float speed = 1f;
-        float delta = Gdx.graphics.getDeltaTime();
-
-
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            glowFrame.translateY(1);
+            targetPos.add(0f,1f);
+            currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            glowFrame.translateX(-1);
+            targetPos.sub(1f,0f);
+            currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            glowFrame.translateY(-1);
+            targetPos.sub(0f,1f);
+            currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            glowFrame.translateX(1);
+            targetPos.add(1f,0f);
+            currentPos = targetPos;
         }
     }
 
