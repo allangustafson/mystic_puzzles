@@ -19,8 +19,10 @@ public class GameScreen implements Screen {
     Sprite glowFrame;
     Vector2 currentPos;
     Vector2 targetPos;
-    float seconds = 1f;
-    float totalDelta = 0f;
+    //Vector2 glowPos;
+    Vector2 increment;
+    //float timer_t = 1f;
+    //float timer = timer_t;
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -30,14 +32,10 @@ public class GameScreen implements Screen {
         glowFrameTexture = new Texture("glowFrame.png");
 
         glowFrame = new Sprite(glowFrameTexture);
-        glowFrame.setSize(1,1);
-        currentPos = new Vector2(5,2);
-        targetPos = new Vector2(5,2);
-        targetPos.set(MathUtils.clamp(targetPos.x, 5, 11),
-                      MathUtils.clamp(targetPos.y, 2, 7));
-        currentPos.set(MathUtils.clamp(currentPos.x, 5, 11),
-                       MathUtils.clamp(currentPos.y, 2, 7));
-        glowFrame.setPosition(currentPos.x,currentPos.y);
+        glowFrame.setSize(1f,1f);
+        currentPos = new Vector2(5f,2f);
+        targetPos = new Vector2(5f,2f);
+        //glowPos = new Vector2(glowFrame.getX(), glowFrame.getY());
 
     }
 
@@ -50,9 +48,11 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         input();
         logic();
-        //totalDelta and lerp don't seem to be working as intended. Perhaps I may need a larger viewport?
-        totalDelta += delta;
-        glowFrame.setPosition(currentPos.lerp(targetPos, totalDelta/seconds).x, currentPos.lerp(targetPos, totalDelta/seconds).y);
+        targetPos.x = MathUtils.clamp(targetPos.x, 5, 10);
+        targetPos.y = MathUtils.clamp(targetPos.y, 2, 6);
+        increment = new Vector2(currentPos.lerp(targetPos, .1f));
+        glowFrame.setX(increment.x);
+        glowFrame.setY(increment.y);
         draw();
     }
 
@@ -60,19 +60,19 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             targetPos.add(0f,1f);
-            currentPos = targetPos;
+            //currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             targetPos.sub(1f,0f);
-            currentPos = targetPos;
+            //currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             targetPos.sub(0f,1f);
-            currentPos = targetPos;
+            //currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             targetPos.add(1f,0f);
-            currentPos = targetPos;
+            //currentPos = targetPos;
         }
     }
 
@@ -82,8 +82,7 @@ public class GameScreen implements Screen {
         float frameWidth = glowFrame.getWidth();
         float frameHeight = glowFrame.getHeight();
 
-        glowFrame.setX(MathUtils.clamp(glowFrame.getX(),5, 10 ));
-        glowFrame.setY(MathUtils.clamp(glowFrame.getY(),2, 6 ));
+        //glowFrame.setPosition(MathUtils.clamp(glowPos,5, 10 ));
 
     }
 
