@@ -54,25 +54,21 @@ public class GameScreen implements Screen {
         glowFrame.setX(increment.x);
         glowFrame.setY(increment.y);
         draw();
-    }
+        }
 
     private void input() {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             targetPos.add(0f,1f);
-            //currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             targetPos.sub(1f,0f);
-            //currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             targetPos.sub(0f,1f);
-            //currentPos = targetPos;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             targetPos.add(1f,0f);
-            //currentPos = targetPos;
         }
     }
 
@@ -82,7 +78,6 @@ public class GameScreen implements Screen {
         float frameWidth = glowFrame.getWidth();
         float frameHeight = glowFrame.getHeight();
 
-        //glowFrame.setPosition(MathUtils.clamp(glowPos,5, 10 ));
 
     }
 
