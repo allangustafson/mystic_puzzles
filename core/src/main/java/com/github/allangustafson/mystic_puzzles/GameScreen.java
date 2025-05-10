@@ -64,8 +64,7 @@ public class GameScreen implements Screen {
 
         increment.set(startingPos.interpolate(targetPos, .0001f, Interpolation.circleOut));
 
-        glowFrame.setX(increment.x);
-        glowFrame.setY(increment.y);
+        glowFrame.setPosition(increment.x, increment.y);
 
         draw();
         }
