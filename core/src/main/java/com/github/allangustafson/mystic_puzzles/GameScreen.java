@@ -39,13 +39,18 @@ public class GameScreen implements Screen {
         startingPos = new Vector2(5f,2f);
         targetPos = new Vector2(5f,2f);
         increment = new Vector2();
+        increment.set(startingPos);
 
         //progress = 0f;  // reset after target is reached
-        //time = 0f;      // reset after target is reached
-        duration = 10f;  // target will be reached in 1 second
+        time = 0f;      // reset after target is reached
+        duration = 1f;  // target will be reached in 1 second
 
         //glowPos = new Vector2(glowFrame.getX(), glowFrame.getY());
 
+    }
+
+    public boolean reachedTarget(Vector2 vector) {
+        return Math.abs(vector.x) - Math.floor(Math.abs(vector.x)) > .9999;
     }
 
     @Override
@@ -59,12 +64,22 @@ public class GameScreen implements Screen {
         input();
         logic();
 
+        if (!startingPos.equals(increment) && reachedTarget(increment)) {
+            increment.x = (float)Math.ceil(increment.x);
+            increment.y = (float)Math.ceil(increment.y);
+            startingPos.set(increment);
+        }
+
         targetPos.x = MathUtils.clamp(targetPos.x, 5, 10);
         targetPos.y = MathUtils.clamp(targetPos.y, 2, 6);
 
-        increment.set(startingPos.interpolate(targetPos, .0001f, Interpolation.circleOut));
+        time += delta / duration;
+
+        if (time >= 1f) time = 1f;
+        increment.interpolate(targetPos, time, Interpolation.circleOut);
 
         glowFrame.setPosition(increment.x, increment.y);
+
 
         draw();
         }
@@ -73,15 +88,19 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             targetPos.add(0f,1f);
+            time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             targetPos.sub(1f,0f);
+            time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             targetPos.sub(0f,1f);
+            time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             targetPos.add(1f,0f);
+            time = 0f;
         }
     }
 
