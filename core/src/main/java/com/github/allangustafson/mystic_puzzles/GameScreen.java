@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,12 +18,14 @@ public class GameScreen implements Screen {
     Texture boardFrame;
     Texture glowFrameTexture;
     Sprite glowFrame;
-    Vector2 currentPos;
+    Vector2 startingPos;
     Vector2 targetPos;
     //Vector2 glowPos;
     Vector2 increment;
-    //float timer_t = 1f;
-    //float timer = timer_t;
+    float progress;
+    float time;
+    float duration;
+
 
     public GameScreen(final Main game) {
         this.game = game;
@@ -33,8 +36,14 @@ public class GameScreen implements Screen {
 
         glowFrame = new Sprite(glowFrameTexture);
         glowFrame.setSize(1f,1f);
-        currentPos = new Vector2(5f,2f);
+        startingPos = new Vector2(5f,2f);
         targetPos = new Vector2(5f,2f);
+        increment = new Vector2();
+
+        //progress = 0f;  // reset after target is reached
+        //time = 0f;      // reset after target is reached
+        duration = 10f;  // target will be reached in 1 second
+
         //glowPos = new Vector2(glowFrame.getX(), glowFrame.getY());
 
     }
@@ -46,13 +55,18 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
         input();
         logic();
+
         targetPos.x = MathUtils.clamp(targetPos.x, 5, 10);
         targetPos.y = MathUtils.clamp(targetPos.y, 2, 6);
-        increment = new Vector2(currentPos.lerp(targetPos, .1f));
+
+        increment.set(startingPos.interpolate(targetPos, .0001f, Interpolation.circleOut));
+
         glowFrame.setX(increment.x);
         glowFrame.setY(increment.y);
+
         draw();
         }
 
