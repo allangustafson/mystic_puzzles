@@ -27,7 +27,7 @@ public class Board {
         }
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                if (hasMatchAt(row,col)) {
+                while (hasMatchAt(row,col)) {
                     this.orbArray[row][col] = new Orb(MathUtils.random(1,6));
                 }
             }
