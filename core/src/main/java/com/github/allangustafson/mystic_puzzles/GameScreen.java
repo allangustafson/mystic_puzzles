@@ -24,13 +24,11 @@ public class GameScreen implements Screen {
     Vector2 increment;
     Board board;
     boolean readyState;
-
-    //float progress;
     float elapsedTime;
     float duration;
-    float startValue;
-    float endValue;
     float progress;
+    float startRow;
+    float startCol;
 
 
 
@@ -51,7 +49,9 @@ public class GameScreen implements Screen {
         board.initializeBoard();
         readyState = true;
         elapsedTime = 0f;
-        duration = 2f;  // target will be reached in 2 seconds
+        duration = 2f;// target will be reached in 2 seconds
+        //startRow = 0f;
+        //startCol = 0f;
 
         //glowPos = new Vector2(glowFrame.getX(), glowFrame.getY());
 
@@ -60,7 +60,12 @@ public class GameScreen implements Screen {
     public boolean reachedTarget(Vector2 vector) {
         // check if vector is close enough to manually finish it.
         // used to occasionally get stuck without this.
-        return Math.abs(vector.x) - Math.floor(Math.abs(vector.x)) > .9499;
+        if ((Math.abs(vector.x) - Math.floor(Math.abs(vector.x)) >= .9499) && (Math.abs(vector.y) - Math.floor(Math.abs(vector.y)) >= .9499)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
@@ -81,8 +86,8 @@ public class GameScreen implements Screen {
         // if not awaiting input, and have reached your target: finish the increment, set new startingPos.
         if ((!readyState) && (reachedTarget(increment))) {        //&& (!startingPos.equals(increment)) do I need this?
             increment.x = ((float)Math.ceil(increment.x))-.05f;
-            increment.y = (float)Math.ceil(increment.y)-.05f;
-            startingPos.set(increment);
+            increment.y = ((float)Math.ceil(increment.y))-.05f;
+            startingPos.set(increment);  //may take out later if we don't use
             readyState = true;
         }
 
@@ -94,9 +99,12 @@ public class GameScreen implements Screen {
 
         glowFrame.setPosition(increment.x, increment.y);
 
+        System.out.println(startRow + "," + startCol);
+        //System.out.println(startingPos.x + "," + startingPos.y);
 
         draw();
         }
+
 
     private void input() {
 
@@ -119,6 +127,33 @@ public class GameScreen implements Screen {
             targetPos.add(1f,0f);
             readyState = false;
             //time = 0f;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            //startRow = 0f;
+            //startCol = 0f;
+            startRow = glowFrame.getY();
+            startCol = glowFrame.getX();
+            board.swap(startRow,startCol,startRow + 1,startCol);
+            readyState = false;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            startRow = glowFrame.getY();
+            startCol = glowFrame.getX();
+            board.swap(startRow,startCol,startRow ,startCol - 1);
+            readyState = false;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            startRow = glowFrame.getY();
+            startCol = glowFrame.getX();
+            board.swap(startRow,startCol,startRow - 1,startCol);
+            readyState = false;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            startRow = glowFrame.getY();
+            startCol = glowFrame.getX();
+            board.swap(startRow,startCol,startRow ,startCol + 1);
+            readyState = false;
         }
     }
 
