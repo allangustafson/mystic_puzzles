@@ -23,6 +23,8 @@ public class GameScreen implements Screen {
     //Vector2 glowPos;
     Vector2 increment;
     Board board;
+    boolean readyState;
+
     //float progress;
     //float time;
     //float duration;
@@ -44,6 +46,7 @@ public class GameScreen implements Screen {
         increment.set(startingPos);
         board = new Board();
         board.initializeBoard();
+        readyState = true;
 
         //progress = 0f;  // reset after target is reached
         //time = 0f;      // reset after target is reached
@@ -54,6 +57,8 @@ public class GameScreen implements Screen {
     }
 
     public boolean reachedTarget(Vector2 vector) {
+        // check if vector is close enough to manually finish it.
+        // used to occasionally get stuck without this.
         return Math.abs(vector.x) - Math.floor(Math.abs(vector.x)) > .9499;
     }
 
@@ -65,13 +70,17 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        input();
+        if (readyState) {
+            input();
+        }
         logic();
 
-        if (!startingPos.equals(increment) && reachedTarget(increment)) {
+        // if not awaiting input, and have reached your target: finish the increment, set new startingPos.
+        if ((!readyState) && (!startingPos.equals(increment)) && (reachedTarget(increment))) {
             increment.x = ((float)Math.ceil(increment.x))-.05f;
             increment.y = (float)Math.ceil(increment.y)-.05f;
             startingPos.set(increment);
+            readyState = true;
         }
 
         targetPos.x = MathUtils.clamp(targetPos.x, 4.95f, 9.95f);
@@ -80,7 +89,7 @@ public class GameScreen implements Screen {
         //time += delta / duration;
 
         //if (time >= .5f) time = .5f;
-        increment.interpolate(targetPos, .1f, Interpolation.circleOut);
+        increment.interpolate(targetPos, .1f, Interpolation.linear);
 
         glowFrame.setPosition(increment.x, increment.y);
 
@@ -92,18 +101,22 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             targetPos.add(0f,1f);
+            readyState = false;
             //time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             targetPos.sub(1f,0f);
+            readyState = false;
             //time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             targetPos.sub(0f,1f);
+            readyState = false;
             //time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             targetPos.add(1f,0f);
+            readyState = false;
             //time = 0f;
         }
     }

@@ -2,8 +2,6 @@ package com.github.allangustafson.mystic_puzzles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix3;
-import com.badlogic.gdx.math.Vector2;
 
 
 
@@ -25,6 +23,8 @@ public class Board {
             }
         }
     }
+
+
 
     public void draw (SpriteBatch batch) {
         for (int row = 0; row < ROWS; row++) {

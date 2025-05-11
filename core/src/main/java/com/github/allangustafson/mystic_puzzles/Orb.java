@@ -2,7 +2,6 @@ package com.github.allangustafson.mystic_puzzles;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.Random;
 
 public class Orb {
     int color;
