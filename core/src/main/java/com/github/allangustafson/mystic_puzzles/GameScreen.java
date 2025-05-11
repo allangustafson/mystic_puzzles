@@ -46,7 +46,6 @@ public class GameScreen implements Screen {
         increment = new Vector2();
         increment.set(startingPos);
         board = new Board();
-        board.initializeBoard();
         readyState = true;
         elapsedTime = 0f;
         duration = 2f;// target will be reached in 2 seconds
@@ -99,7 +98,7 @@ public class GameScreen implements Screen {
 
         glowFrame.setPosition(increment.x, increment.y);
 
-        System.out.println(startRow + "," + startCol);
+        //System.out.println(startRow + "," + startCol);
         //System.out.println(startingPos.x + "," + startingPos.y);
 
         draw();
