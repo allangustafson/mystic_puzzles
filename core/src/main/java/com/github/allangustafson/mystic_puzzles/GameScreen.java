@@ -26,8 +26,11 @@ public class GameScreen implements Screen {
     boolean readyState;
 
     //float progress;
-    //float time;
-    //float duration;
+    float elapsedTime;
+    float duration;
+    float startValue;
+    float endValue;
+    float progress;
 
 
 
@@ -47,10 +50,8 @@ public class GameScreen implements Screen {
         board = new Board();
         board.initializeBoard();
         readyState = true;
-
-        //progress = 0f;  // reset after target is reached
-        //time = 0f;      // reset after target is reached
-        //duration = 1f;  // target will be reached in 1 second
+        elapsedTime = 0f;
+        duration = 2f;  // target will be reached in 2 seconds
 
         //glowPos = new Vector2(glowFrame.getX(), glowFrame.getY());
 
@@ -69,6 +70,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        elapsedTime += delta;
+        progress = Math.min(elapsedTime/duration, 1f);
 
         if (readyState) {
             input();
@@ -76,7 +79,7 @@ public class GameScreen implements Screen {
         logic();
 
         // if not awaiting input, and have reached your target: finish the increment, set new startingPos.
-        if ((!readyState) && (!startingPos.equals(increment)) && (reachedTarget(increment))) {
+        if ((!readyState) && (reachedTarget(increment))) {        //&& (!startingPos.equals(increment)) do I need this?
             increment.x = ((float)Math.ceil(increment.x))-.05f;
             increment.y = (float)Math.ceil(increment.y)-.05f;
             startingPos.set(increment);
@@ -86,10 +89,8 @@ public class GameScreen implements Screen {
         targetPos.x = MathUtils.clamp(targetPos.x, 4.95f, 9.95f);
         targetPos.y = MathUtils.clamp(targetPos.y, 1.95f, 5.95f);
 
-        //time += delta / duration;
 
-        //if (time >= .5f) time = .5f;
-        increment.interpolate(targetPos, .1f, Interpolation.linear);
+        increment.interpolate(targetPos, progress, Interpolation.circleOut);
 
         glowFrame.setPosition(increment.x, increment.y);
 
