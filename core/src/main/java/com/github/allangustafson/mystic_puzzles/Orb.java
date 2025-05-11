@@ -5,12 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.Random;
 
 public class Orb {
-    float x,y;
     int color;
     Texture orbTexture;
-    public Orb(float x,float y, int color) {
-        this.x = x;
-        this.y = y;
+    public Orb(int color) {
         this.color = color;
 
         switch (color) {
@@ -35,7 +32,7 @@ public class Orb {
         }
     }
 
-    private void draw () {
-
-    }
+    //private void draw () {
+    //
+    //}
 }
