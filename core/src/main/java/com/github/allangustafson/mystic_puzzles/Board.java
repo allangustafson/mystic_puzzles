@@ -1,11 +1,10 @@
 package com.github.allangustafson.mystic_puzzles;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Board {
@@ -13,6 +12,11 @@ public class Board {
     private final int COLS = 6;
     public Orb[][] orbArray = new Orb[ROWS][COLS];
     public Orb temp;
+    public List<Orb> match = new ArrayList<>();
+    public List<Orb> horzList = new ArrayList<>();
+    public List<Orb> vertList = new ArrayList<>();
+    public boolean isInit = true;
+
 
     public Board () {
         initializeBoard();
@@ -22,17 +26,18 @@ public class Board {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 int color = MathUtils.random(1,6);
-                this.orbArray[row][col] = new Orb(color);
+                this.orbArray[row][col] = new Orb(color, row, col);
             }
         }
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 while (hasMatchAt(row,col)) {
-                    this.orbArray[row][col] = new Orb(MathUtils.random(1,6));
+                    this.orbArray[row][col] = new Orb(MathUtils.random(1,6), row, col);
                 }
             }
         }
-
+        match.clear();
+        isInit = false;
     }
 
     public void swap(float originRow, float originCol, float destinationRow, float destinationCol) {
@@ -42,11 +47,18 @@ public class Board {
         int iDestinationCol = MathUtils.clamp((int)(Math.ceil(destinationCol) - 5), 0, COLS -1);
 
         temp = orbArray[iOriginRow][iOriginCol];
+        temp.x = iDestinationRow;
+        temp.y = iDestinationCol;
         orbArray[iOriginRow][iOriginCol] = orbArray[iDestinationRow][iDestinationCol];
+        orbArray[iOriginRow][iOriginCol].x = iOriginRow;
+        orbArray[iOriginRow][iOriginCol].y = iOriginCol;
         orbArray[iDestinationRow][iDestinationCol] = temp;
 
         if (hasMatchAt(iOriginRow,iOriginCol) || hasMatchAt(iDestinationRow, iDestinationCol)) {
-            System.out.println("matched");
+            if (!isInit) {
+                removeMatches(match);
+                match.clear();
+            }
         } else {
             temp = orbArray[iOriginRow][iOriginCol];
             orbArray[iOriginRow][iOriginCol] = orbArray[iDestinationRow][iDestinationCol];
@@ -60,22 +72,39 @@ public class Board {
         int vertMatch = 1;
 
         for (int i = row - 1; i >= 0 && orbArray[i][col].color == orbColor; i--) {
+            vertList.add(orbArray[i][col]);
             vertMatch++;
         }
         for (int i = row + 1; i < ROWS && orbArray[i][col].color == orbColor; i++) {
+            vertList.add(orbArray[i][col]);
             vertMatch++;
         }
 
         for (int i = col - 1; i >= 0 && orbArray[row][i].color == orbColor; i--) {
+            horzList.add(orbArray[row][i]);
             horzMatch++;
         }
         for (int i = col + 1; i < COLS && orbArray[row][i].color == orbColor; i++) {
+            horzList.add(orbArray[row][i]);
             horzMatch++;
         }
-
-        System.out.println(horzMatch + "," + vertMatch);
+        if (horzMatch < 3) horzList.clear();
+        if (vertMatch < 3) vertList.clear();
+        if (horzMatch >= 3 || vertMatch >= 3) {
+            match.add(orbArray[row][col]);
+            match.addAll(horzList);
+            horzList.clear();
+            match.addAll(vertList);
+            vertList.clear();
+        }
 
         return horzMatch >= 3 || vertMatch >= 3;
+    }
+
+    public void removeMatches(List<Orb> match) {
+        for (Orb orb : match) {
+            orbArray[orb.x][orb.y] = null;
+        }
     }
 
 
@@ -83,7 +112,9 @@ public class Board {
         for (int row = 0; row < (ROWS); row++) {
             for (int col = 0; col < (COLS); col++) {
                 Orb orb = orbArray[row][col];
-                batch.draw(orb.orbTexture, col +5.05f, row +2.05f, .9f, .9f);
+                if (orb != null) {
+                    batch.draw(orb.orbTexture, col + 5.05f, row + 2.05f, .9f, .9f);
+                }
             }
         }
     }

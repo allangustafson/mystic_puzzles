@@ -6,8 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 public class Orb {
     int color;
     Texture orbTexture;
-    public Orb(int color) {
+    int x;
+    int y;
+    public Orb(int color ,int x , int y) {
         this.color = color;
+        this.x = x;
+        this.y = y;
 
         switch (color) {
             case 1:
@@ -31,7 +35,5 @@ public class Orb {
         }
     }
 
-    //private void draw () {
-    //
-    //}
+
 }

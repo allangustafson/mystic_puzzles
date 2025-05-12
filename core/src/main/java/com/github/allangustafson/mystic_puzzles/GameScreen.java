@@ -20,7 +20,6 @@ public class GameScreen implements Screen {
     Sprite glowFrame;
     Vector2 startingPos;
     Vector2 targetPos;
-    //Vector2 glowPos;
     Vector2 increment;
     Board board;
     boolean readyState;
@@ -49,10 +48,6 @@ public class GameScreen implements Screen {
         readyState = true;
         elapsedTime = 0f;
         duration = 2f;// target will be reached in 2 seconds
-        //startRow = 0f;
-        //startCol = 0f;
-
-        //glowPos = new Vector2(glowFrame.getX(), glowFrame.getY());
 
     }
 
@@ -98,9 +93,6 @@ public class GameScreen implements Screen {
 
         glowFrame.setPosition(increment.x, increment.y);
 
-        //System.out.println(startRow + "," + startCol);
-        //System.out.println(startingPos.x + "," + startingPos.y);
-
         draw();
         }
 
@@ -110,27 +102,21 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             targetPos.add(0f,1f);
             readyState = false;
-            //time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             targetPos.sub(1f,0f);
             readyState = false;
-            //time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             targetPos.sub(0f,1f);
             readyState = false;
-            //time = 0f;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             targetPos.add(1f,0f);
             readyState = false;
-            //time = 0f;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            //startRow = 0f;
-            //startCol = 0f;
             startRow = glowFrame.getY();
             startCol = glowFrame.getX();
             board.swap(startRow,startCol,startRow + 1,startCol);
