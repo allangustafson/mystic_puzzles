@@ -51,8 +51,11 @@ public class Board {
         orbArray[iOriginRow][iOriginCol].x = iOriginRow;
         orbArray[iOriginRow][iOriginCol].y = iOriginCol;
         orbArray[iDestinationRow][iDestinationCol] = temp;
+        System.out.println(orbArray[iDestinationRow][iDestinationCol].x + "," + orbArray[iDestinationRow][iDestinationCol].y);
+        //orbArray[iDestinationRow][iDestinationCol].x = temp.x;
+        //orbArray[iDestinationRow][iDestinationCol].y = temp.y;
 
-        if (hasMatchAt(iOriginRow,iOriginCol) || hasMatchAt(iDestinationRow, iDestinationCol)) {
+        if (hasMatchAt(iOriginRow, iOriginCol) || hasMatchAt(iDestinationRow, iDestinationCol)) {
             removeMatches(match);
             match.clear();
             fall();
@@ -65,24 +68,27 @@ public class Board {
     }
 
     public boolean hasMatchAt(int row, int col) {
+
+        if (orbArray[row][col]==null) return false;
         int orbColor = orbArray[row][col].color;
+
         int horzMatch = 1;
         int vertMatch = 1;
 
-        for (int i = row - 1; i >= 0 && orbArray[i][col].color == orbColor; i--) {
+        for (int i = row - 1; i >= 0 && orbArray[i][col]!=null && orbArray[i][col].color == orbColor; i--) {
             vertList.add(orbArray[i][col]);
             vertMatch++;
         }
-        for (int i = row + 1; i < ROWS && orbArray[i][col].color == orbColor; i++) {
+        for (int i = row + 1; i < ROWS && orbArray[i][col]!=null && orbArray[i][col].color == orbColor; i++) {
             vertList.add(orbArray[i][col]);
             vertMatch++;
         }
 
-        for (int i = col - 1; i >= 0 && orbArray[row][i].color == orbColor; i--) {
+        for (int i = col - 1; i >= 0 && orbArray[row][i]!=null && orbArray[row][i].color == orbColor; i--) {
             horzList.add(orbArray[row][i]);
             horzMatch++;
         }
-        for (int i = col + 1; i < COLS && orbArray[row][i].color == orbColor; i++) {
+        for (int i = col + 1; i < COLS && orbArray[row][i]!=null && orbArray[row][i].color == orbColor; i++) {
             horzList.add(orbArray[row][i]);
             horzMatch++;
         }
