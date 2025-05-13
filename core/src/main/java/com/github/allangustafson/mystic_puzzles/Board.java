@@ -43,6 +43,7 @@ public class Board {
         int iOriginCol = (int)(Math.ceil(originCol) - 5);
         int iDestinationRow = MathUtils.clamp((int)(Math.ceil(destinationRow) - 2), 0, ROWS -1);
         int iDestinationCol = MathUtils.clamp((int)(Math.ceil(destinationCol) - 5), 0, COLS -1);
+        boolean matched = false;
 
         temp = orbArray[iOriginRow][iOriginCol];
         temp.x = iDestinationRow;
@@ -55,16 +56,23 @@ public class Board {
         //orbArray[iDestinationRow][iDestinationCol].x = temp.x;
         //orbArray[iDestinationRow][iDestinationCol].y = temp.y;
 
-        if (hasMatchAt(iOriginRow, iOriginCol) || hasMatchAt(iDestinationRow, iDestinationCol)) {
+        if (hasMatchAt(iOriginRow, iOriginCol)) {
             removeMatches(match);
             match.clear();
-            fall();
-            addOrbs();
-        } else {
+            matched = true;
+        }
+        if (hasMatchAt(iDestinationRow, iDestinationCol)) {
+            removeMatches(match);
+            match.clear();
+            matched = true;
+        }
+        if (!matched) {
             temp = orbArray[iOriginRow][iOriginCol];
             orbArray[iOriginRow][iOriginCol] = orbArray[iDestinationRow][iDestinationCol];
             orbArray[iDestinationRow][iDestinationCol] = temp;
         }
+        fall();
+        addOrbs();
     }
 
     public boolean hasMatchAt(int row, int col) {
