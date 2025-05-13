@@ -15,7 +15,6 @@ public class Board {
     public List<Orb> match = new ArrayList<>();
     public List<Orb> horzList = new ArrayList<>();
     public List<Orb> vertList = new ArrayList<>();
-    public boolean isInit = true;
 
 
     public Board () {
@@ -37,7 +36,6 @@ public class Board {
             }
         }
         match.clear();
-        isInit = false;
     }
 
     public void swap(float originRow, float originCol, float destinationRow, float destinationCol) {
@@ -55,10 +53,9 @@ public class Board {
         orbArray[iDestinationRow][iDestinationCol] = temp;
 
         if (hasMatchAt(iOriginRow,iOriginCol) || hasMatchAt(iDestinationRow, iDestinationCol)) {
-            if (!isInit) {
-                removeMatches(match);
-                match.clear();
-            }
+            removeMatches(match);
+            match.clear();
+            fall();
         } else {
             temp = orbArray[iOriginRow][iOriginCol];
             orbArray[iOriginRow][iOriginCol] = orbArray[iDestinationRow][iDestinationCol];
@@ -106,6 +103,36 @@ public class Board {
             orbArray[orb.x][orb.y] = null;
         }
     }
+
+    public void fall() {
+        for (int x = 0; x < COLS; x++) {
+            int spaceY = -0;
+            boolean space = false;
+
+            int y = 0;
+            while (y < ROWS) {
+                Orb orb = orbArray[y][x];
+                if (space) {
+                    if (orb!=null) {
+                        orbArray[spaceY][x] = orb;
+                        orb.y = spaceY;
+                        orbArray[y][x] = null;
+
+                        space = false;
+                        y = spaceY;
+                        spaceY = 0;
+                    }
+                } else if (orb==null) {
+                    space = true;
+                    if (spaceY==0) {
+                        spaceY = y;
+                    }
+                }
+                y++;
+            }
+        }
+    }
+
 
 
     public void draw (SpriteBatch batch) {
