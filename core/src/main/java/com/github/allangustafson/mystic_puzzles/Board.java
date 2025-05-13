@@ -56,6 +56,7 @@ public class Board {
             removeMatches(match);
             match.clear();
             fall();
+            addOrbs();
         } else {
             temp = orbArray[iOriginRow][iOriginCol];
             orbArray[iOriginRow][iOriginCol] = orbArray[iDestinationRow][iDestinationCol];
@@ -104,6 +105,7 @@ public class Board {
         }
     }
 
+    // adapted from a function in Harvard CS50 game course
     public void fall() {
         for (int x = 0; x < COLS; x++) {
             int spaceY = -0;
@@ -129,6 +131,20 @@ public class Board {
                     }
                 }
                 y++;
+            }
+        }
+    }
+
+    public void addOrbs() {
+        for (int col = 0; col < COLS; col++) {
+            int row = 0;
+            while (row < ROWS) {
+                Orb orb = orbArray[row][col];
+                if (orb == null) {
+                    int color = MathUtils.random(1, 6);
+                    orbArray[row][col] = new Orb(color,row - 2, col - 5);
+                }
+                row++;
             }
         }
     }
